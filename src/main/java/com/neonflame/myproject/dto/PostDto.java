@@ -6,12 +6,12 @@ import java.util.Date;
 
 public class PostDto {
 
-    private long id;
-    private String owner;
-    private Date date;
-    private String title;
-    private String content;
-    private int commentsNumber;
+    protected long id;
+    protected String owner;
+    protected Date date;
+    protected String title;
+    protected String content;
+    protected int commentsNumber;
 
     public PostDto(Post post) {
         this.id = post.getId();

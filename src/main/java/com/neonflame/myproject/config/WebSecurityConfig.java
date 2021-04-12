@@ -8,10 +8,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
+@EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     public final MyUserDetailsService userDetailsService;
@@ -44,12 +46,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers(HttpMethod.GET, "/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
-                .antMatchers(HttpMethod.POST, "/**").hasAnyRole(Role.ADMIN.name())
-                .antMatchers(HttpMethod.PUT, "/**").hasAnyRole(Role.ADMIN.name())
-                .antMatchers(HttpMethod.DELETE, "/**").hasAnyRole(Role.ADMIN.name())
-                .anyRequest()
-                .authenticated()
+                .antMatchers("/api/v1/admin/**").hasAnyRole(Role.ADMIN.name())
+                .anyRequest().authenticated()
                 .and()
                 .formLogin().permitAll()
                 .and()

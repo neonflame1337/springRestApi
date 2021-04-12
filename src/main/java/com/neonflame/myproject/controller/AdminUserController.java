@@ -1,26 +1,31 @@
 package com.neonflame.myproject.controller;
 
 import com.neonflame.myproject.dto.UserDto;
+import com.neonflame.myproject.dto.UserRegDto;
+import com.neonflame.myproject.exeption.UserExistException;
 import com.neonflame.myproject.model.User;
 import com.neonflame.myproject.repository.UserRepo;
+import com.neonflame.myproject.service.UserService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/admin/user")
+@PreAuthorize("hasAuthority('ADMIN')")
 public class AdminUserController {
 
     private final UserRepo userRepo;
+    private final UserService userService;
 
-    public AdminUserController(UserRepo userRepo) {
+    public AdminUserController(UserRepo userRepo, UserService userService) {
         this.userRepo = userRepo;
+        this.userService = userService;
     }
 
     @GetMapping("")
@@ -46,8 +51,13 @@ public class AdminUserController {
     }
 
     @PostMapping("")
-    public String addUser() {
-        return null;
+    public ResponseEntity<UserDto> addUser(@RequestBody UserRegDto userReg) {
+        try {
+            User user = userService.register(userReg.getUsername(), userReg.getPass());
+            return new ResponseEntity<>(new UserDto(user), HttpStatus.OK);
+        } catch (UserExistException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/{id}")

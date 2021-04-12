@@ -15,7 +15,7 @@ public class MyUserDetailsFactory {
                 user.getId(),
                 user.getUsername(),
                 user.getPass(),
-                mapToGrantedAuthority(new ArrayList<>(user.getRoles())),
+                mapToGrantedAuthority(user.getRoles()),
                 user.isActive()
         );
     }

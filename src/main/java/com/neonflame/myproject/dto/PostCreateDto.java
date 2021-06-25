@@ -2,11 +2,21 @@ package com.neonflame.myproject.dto;
 
 public class PostCreateDto {
 
+    String username;
+
     String title;
 
     String content;
 
     public PostCreateDto() {
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getTitle() {

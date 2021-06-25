@@ -2,7 +2,6 @@ package com.neonflame.myproject.controller;
 
 import com.neonflame.myproject.dto.UserDto;
 import com.neonflame.myproject.dto.UserRegDto;
-import com.neonflame.myproject.exeption.UserExistException;
 import com.neonflame.myproject.model.User;
 import com.neonflame.myproject.repository.UserRepo;
 import com.neonflame.myproject.service.UserService;
@@ -30,34 +29,24 @@ public class AdminUserController {
 
     @GetMapping("")
     public ResponseEntity<Collection<UserDto>> showAllUsers() {
-        List<User> users = userRepo.findAll();
-        if (!users.isEmpty()) {
-            return new ResponseEntity<>(users.stream()
-                    .map(UserDto::new)
-                    .collect(Collectors.toList()),
-                    HttpStatus.OK);
-        }
-        else
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        List<User> users = userService.findAllUsers();
+        return new ResponseEntity<>(users.stream()
+                .map(UserDto::new)
+                .collect(Collectors.toList()),
+                HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> showUser(@PathVariable("id") long id) {
-        User res = userRepo.findById(id);
-        if (res != null)
-            return new ResponseEntity<>(new UserDto(res), HttpStatus.OK);
-        else
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        User res = userService.findUserById(id);
+        return new ResponseEntity<>(new UserDto(res), HttpStatus.OK);
     }
 
     @PostMapping("")
     public ResponseEntity<UserDto> addUser(@RequestBody UserRegDto userReg) {
-        try {
-            User user = userService.register(userReg.getUsername(), userReg.getPass());
-            return new ResponseEntity<>(new UserDto(user), HttpStatus.OK);
-        } catch (UserExistException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(
+                new UserDto(userService.register(userReg.getUsername(), userReg.getPass())),
+                HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

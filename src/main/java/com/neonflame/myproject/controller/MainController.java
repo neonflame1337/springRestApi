@@ -1,11 +1,9 @@
 package com.neonflame.myproject.controller;
 
-import com.neonflame.myproject.exeption.UserExistException;
 import com.neonflame.myproject.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 
 @RestController
